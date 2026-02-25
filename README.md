@@ -1,56 +1,164 @@
-# App de Clima Chile 🇨🇱 (SPA con Vue.js)
+# 🇨🇱 Clima Chile - App de Clima con Vue.js
 
-## 📌 Descripción General
-"**Clima Chile**" es una aplicación de una sola página (SPA - Single Page Application) interactiva, desarrollada íntegramente en **Vue 3** y empaquetada con **Vite**. 
+Una aplicación SPA (Single Page Application) del clima en Chile construida con Vue 3, Vue Router y Vuex.
 
-El propósito principal del proyecto es proveer a los usuarios un informe meteorológico estilizado y rápido sobre las **16 Capitales Regionales de Chile** (desde Arica y Parinacota por el norte, abarcando hasta Magallanes y de la Antártica Chilena en el soleado extremo austral del país). Todo sucede en una navegación instantánea, fluida y sin recargas en el navegador, poniendo a prueba conceptos fundamentales de Vue como interpolación, directivas reactivas, Two-way Data Binding y manejo de rutas con `vue-router`.
+## 🚀 Demo
 
-## 🌌 Temática y Diseño Visual
-Se abandonó el aspecto monocromático genérico apostando por un diseño Premium y minimalista. La UI/UX fue construida desde cero:
-*   Integra el popular efecto **Glassmorphism** (paneles translúcidos y bordes difuminados).
-*   Emplea tarjetas (cards) fotográficas en alta resolución de las ciudades de Chile extraídas estáticamente mediante un compilador.
-*   Usa CSS nativo a gran escala con micro-animaciones en los efectos *hover* para generar respuesta inmediata y placer visual en cada interacción.
-*   **Estética adaptativa**: Los fondos cambian inteligentemente cuando se selecciona una ciudad asimilando los colores locales mientras un gradiente oscuro garantiza que el texto nunca pierda contraste.
+> Ejecuta localmente siguiendo las instrucciones más abajo.
 
-## 🚀 Características y Funcionalidad
-*   **Home ('/'): Listado Fotográfico Fluido y Motor de Búsqueda:** La página principal no sólo exhibe de golpe las 16 tarjetas fotográficas con la temperatura y la condición del clima actual ("Despejado", "Nublado", "Lluvia"), sino que añade un formulario transparente en la cabecera. A través de un enlace de `v-model` el usuario puede filtrar las tarjetas de las ciudades escribiendo a tiempo real de forma responsiva.
-*   **Detalle ('/lugar/:id'): Perfil Meteorológico Integral:** Selección programática que inyecta parámetros en la barra del navegador (rutas dinámicas de vue-router). En esta ventana el usuario tiene acceso a un pronóstico detallado, información sobre valores Mínimos, Máximos y un Promedio de las condiciones semanales junto a una descripción turística de su relieve y ubicación territorial de Chile.
-*   **Interactividad Extra: Conversor Unidades Térmicas Integrado:** Requisito especial adicional de control de estado. Con un simple click en las vistas de Detalle, todo el componente actualiza y recalcula dinámicamente sus valores numéricos transformando los centígrados originales (°C) al equivalente de la escala fahrenheit (°F) dentro del mismo componente sin requerir recarga externa.
+## ✨ Características
 
-## 🛣️ Vistas y Rutas
-1.  **`/` (`HomeView.vue`):** Listado principal de ciudades chilenas con motor de búsqueda y tarjetas climáticas en grid fotográfica.
-2.  **`/lugar/:id` (`DetailView.vue`):** Renderizado dinámico condicionado (`v-if`) mostrando datos extendidos por ciudad con fondos envolventes adaptativos.
+### Módulo 6 – SPA Base
+- Listado de 16 ciudades chilenas con datos meteorológicos mock
+- Vista de detalle por ciudad con pronóstico y estadísticas
+- Búsqueda de ciudades en tiempo real
+- Diseño glassmorphism oscuro y responsive
+- Transiciones animadas entre vistas
 
-## 👨‍💻 Ecosistema Técnico de Vue
-*   **Enrutador (`vue-router`):** Configurado en modo historia (Web History) para el manejo natural del estado de la URL.
-*   **Composición de Estado Local:** Uso constante de `ref()` (para búsqueda y formato de grados) y `computed()` (para filtrar lista) centralizados en `<script setup>`.
-*   **Directivas Nativas:** 
-    *   `v-for` para renderizar colecciones del MockData.
-    *   `v-show` para dar feedback visual amigable si el buscador devuelve "0" coincidencias.
-    *   `v-model` para la barra de búsqueda (Two-way data binding reactivo sin delays).
-*   **Eventos:** (`@click`) aplicado a funciones lógicas, navegación programática entre retrocesos de ventanas y en conversores de formato (°C / °F).
+### Módulo 7 – Usuarios, Login y Estado Global (nuevo)
+- **Sistema de autenticación simulado** con usuarios mock
+- **Vuex Store** con módulo `auth` (namespaced) para gestionar el estado global de sesión
+- **Login** con formulario, validación de credenciales, manejo de errores y redirección post-login
+- **Registro** de nuevos usuarios con validación en el cliente
+- **Rutas protegidas** (`/favoritos`, `/perfil`) con navigation guards en Vue Router
+- **Persistencia de sesión** en `localStorage`
+- **Navbar dinámico** que muestra el avatar y nombre del usuario autenticado
+- **Favoritos por usuario**: guardar/quitar ciudades favoritas (leídos desde Vuex)
+- **Preferencias personales**: unidad de temperatura (°C/°F) y tema (claro/oscuro) guardados en Vuex
+- **La preferencia de temperatura se aplica** en la vista de detalle (°C o °F según el perfil del usuario)
 
-## 🛠️ Instrucciones de Instalación y Ejecución
+---
 
-*Este proyecto es parte del Módulo 6 del plan de desarrollo frontend y requiere Node.js instalado globalmente.*
+## 🔐 Sistema de Autenticación
 
-1.  Clona este repositorio o descarga y extrae el archivo `.zip`:
-    ```bash
-    git clone https://github.com/lmavalosc/app-clima-vue-spa.git
-    cd app-clima-vue-spa
-    ```
-2.  Inicializa los paquetes en base a la configuración existente de npm (creará la carpeta `node_modules` localmente pero no estará subida al repo remoto):
-    ```bash
-    npm install
-    ```
-3.  Arranca la instancia del servidor de pruebas en formato de desarrollo (Hot Module Replacement) impulsado por Vite:
-    ```bash
-    npm run dev
-    ```
-4.  Copia en tu navegador web la dirección asignada por el terminal, tradicionalmente la ruta oficial será:
-   ```url
-   http://localhost:5173
-   ```
+### Flujo de Login
+1. El usuario ingresa su correo y contraseña en `/login`
+2. La acción `auth/login` en Vuex llama a la función `authLogin()` (asíncrona, simula latencia de red)
+3. Si las credenciales son correctas → mutation `LOGIN_SUCCESS` → estado `isAuthenticated: true` → redirige al home
+4. Si son incorrectas → mutation `SET_ERROR` → se muestra el mensaje "Usuario o contraseña incorrectos"
 
-## 🔗 Repositorio Oficial
-Puedes acceder al código fuente completo y al historial de versiones desde el **[repositorio oficial del proyecto en GitHub](https://github.com/lmavalosc/weather-frontend-m6)**.
+### Flujo de Cierre de Sesión
+1. El usuario hace clic en "Salir" en el navbar
+2. La acción `auth/logout` ejecuta la mutation `LOGOUT`
+3. Se limpia el estado de usuario en Vuex y se elimina `clima_user` de `localStorage`
+4. Se redirige a `/login`
+
+### Usuarios de prueba (credenciales mock)
+| Nombre | Correo | Contraseña | Favoritos |
+|--------|--------|------------|-----------|
+| Ana García | `ana@clima.cl` | `1234` | Santiago, Valparaíso, Puerto Montt |
+| Carlos Mendoza | `carlos@clima.cl` | `abcd` | Arica, Iquique, Antofagasta |
+| Sofía Torres | `sofia@clima.cl` | `pass123` | Temuco, Valdivia, Coyhaique, Punta Arenas |
+
+---
+
+## 🗺️ Rutas de la aplicación
+
+| Ruta | Nombre | Acceso |
+|------|--------|--------|
+| `/` | home | Público |
+| `/lugar/:id` | detail | Público |
+| `/login` | login | Solo no autenticados |
+| `/registro` | registro | Solo no autenticados |
+| `/favoritos` | favoritos | **Requiere sesión** |
+| `/perfil` | perfil | **Requiere sesión** |
+
+### Rutas protegidas
+Las rutas `/favoritos` y `/perfil` están protegidas mediante el `meta: { requiresAuth: true }` en la configuración del router y el guard global `router.beforeEach()`. Si un usuario no autenticado intenta acceder, es redirigido automáticamente a `/login?redirect=[ruta-original]`. Tras iniciar sesión correctamente, se lo redirige a la ruta que intentaba visitar.
+
+---
+
+## 🏗️ Estructura del proyecto
+
+```
+src/
+├── assets/
+│   └── style.css            # Estilos globales
+├── data/
+│   ├── weatherMock.js       # Datos de ciudades
+│   └── usersMock.js         # Usuarios mock + funciones de auth simulada
+├── store/
+│   ├── index.js             # Store raíz de Vuex
+│   └── modules/
+│       └── auth.js          # Módulo de autenticación (state, getters, mutations, actions)
+├── router/
+│   └── index.js             # Rutas + navigation guards
+├── views/
+│   ├── HomeView.vue         # Listado de ciudades con favoritos
+│   ├── DetailView.vue       # Detalle de ciudad (temp. según preferencias Vuex)
+│   ├── LoginView.vue        # Formulario de login
+│   ├── RegisterView.vue     # Formulario de registro
+│   ├── FavoritosView.vue    # Ruta privada: mis favoritos
+│   └── PerfilView.vue       # Ruta privada: perfil y preferencias
+├── App.vue                  # Componente raíz con navbar dinámico
+└── main.js                  # Punto de entrada (registra Vue Router + Vuex)
+```
+
+---
+
+## 🗃️ Vuex Store – Módulo `auth`
+
+### State
+```js
+{
+  currentUser: null | { id, nombre, email, avatar, preferencias, favoritos },
+  isAuthenticated: false,
+  loading: false,
+  error: null
+}
+```
+
+### Mutations
+| Mutation | Descripción |
+|----------|-------------|
+| `SET_LOADING` | Activa/desactiva el flag de carga |
+| `SET_ERROR` | Guarda un mensaje de error |
+| `CLEAR_ERROR` | Limpia el mensaje de error |
+| `LOGIN_SUCCESS` | Guarda el usuario en estado + localStorage |
+| `LOGOUT` | Limpia el estado + elimina de localStorage |
+| `UPDATE_PREFERENCIAS` | Actualiza preferencias del usuario |
+| `TOGGLE_FAVORITO` | Agrega/quita una ciudad de favoritos |
+
+### Actions
+| Action | Descripción |
+|--------|-------------|
+| `auth/login` | Autentica al usuario (asíncrono, simula API) |
+| `auth/register` | Registra un nuevo usuario (asíncrono) |
+| `auth/logout` | Cierra la sesión |
+| `auth/actualizarPreferencias` | Actualiza preferencias de temperatura/tema |
+| `auth/toggleFavorito` | Agrega/quita ciudad de la lista de favoritos |
+
+---
+
+## 🛠️ Instalación y ejecución
+
+```bash
+# Clonar el repositorio
+git clone <URL_DEL_REPO>
+cd app-clima-vue
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
+```
+
+La app estará disponible en `http://localhost:5173`
+
+---
+
+## 🔗 Repositorio
+
+[GitHub – lmavalosc/weather-frontend-m6](https://github.com/lmavalosc/weather-frontend-m6)
+
+---
+
+## 🧰 Stack tecnológico
+
+| Tecnología | Versión |
+|-----------|---------|
+| Vue.js | 3.x |
+| Vue Router | 4.x |
+| Vuex | 4.x |
+| Vite | 5.x |

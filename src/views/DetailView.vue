@@ -1,12 +1,20 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { chileCitiesData } from '../data/weatherMock'
 
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 
-const isCelsius = ref(true)
+// Preferencias del usuario desde Vuex
+const preferencias = computed(() => store.getters['auth/preferencias'])
+const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
+const favoriteIds = computed(() => store.getters['auth/favoritos'])
+
+// La unidad de temperatura viene de Vuex (preferencias del usuario)
+const isCelsius = computed(() => preferencias.value.unidad === 'C')
 
 const city = computed(() => {
   return chileCitiesData.find(c => c.id === route.params.id)
@@ -16,24 +24,56 @@ const goBack = () => {
   router.push('/')
 }
 
-const toggleTemp = () => {
-  isCelsius.value = !isCelsius.value
-}
-
 const formatTemp = (tempC) => {
   if (isCelsius.value) return `${tempC}°C`
-  const tempF = Math.round((tempC * 9/5) + 32)
+  const tempF = Math.round((tempC * 9 / 5) + 32)
   return `${tempF}°F`
+}
+
+const isFavorito = computed(() => {
+  return city.value ? favoriteIds.value.includes(city.value.id) : false
+})
+
+const toggleFavorito = () => {
+  if (!isAuthenticated.value) {
+    router.push('/login')
+    return
+  }
+  store.dispatch('auth/toggleFavorito', city.value.id)
+}
+
+const toggleTempUnit = () => {
+  const nuevaUnidad = isCelsius.value ? 'F' : 'C'
+  store.dispatch('auth/actualizarPreferencias', { unidad: nuevaUnidad })
 }
 </script>
 
 <template>
   <div class="detail-view" v-if="city">
-    <button @click="goBack" class="btn btn-secondary back-btn">
-      &larr; Volver al inicio
-    </button>
+    <div class="top-bar">
+      <button @click="goBack" class="btn btn-secondary back-btn">
+        ← Volver al inicio
+      </button>
+      <!-- Botón favorito en el detalle -->
+      <button
+        id="detail-fav-btn"
+        class="fav-btn"
+        :class="{ active: isFavorito }"
+        @click="toggleFavorito"
+        :title="isFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+      >
+        {{ isFavorito ? '⭐ En favoritos' : '☆ Agregar a favoritos' }}
+      </button>
+    </div>
 
-    <div class="city-detail glass-panel" :style="city ? { backgroundImage: `linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.95)), url(${city.image})` } : {}">
+    <!-- Indicador de preferencia de usuario -->
+    <div v-if="isAuthenticated" class="user-pref-banner">
+      <span>🌡️ Mostrando temperaturas en {{ isCelsius ? 'Celsius (°C)' : 'Fahrenheit (°F)' }} según tus preferencias</span>
+      <RouterLink to="/perfil" class="pref-link">Cambiar en perfil →</RouterLink>
+    </div>
+
+    <div class="city-detail glass-panel"
+      :style="city ? { backgroundImage: `linear-gradient(135deg, rgba(30,41,59,0.8), rgba(15,23,42,0.95)), url(${city.image})` } : {}">
       <div class="header-section">
         <div>
           <h1 class="title">{{ city.name }}</h1>
@@ -44,7 +84,7 @@ const formatTemp = (tempC) => {
           <span class="main-icon">{{ city.currentWeather.icon }}</span>
           <div class="temp-switch-container">
             <span class="main-temp">{{ formatTemp(city.currentWeather.temp) }}</span>
-            <button @click="toggleTemp" class="temp-toggle">
+            <button id="detail-temp-toggle" @click="toggleTempUnit" class="temp-toggle">
               Cambiar a {{ isCelsius ? '°F' : '°C' }}
             </button>
           </div>
@@ -56,8 +96,8 @@ const formatTemp = (tempC) => {
         <div class="forecast-section glass-panel inner-panel">
           <h2 class="subtitle">Pronóstico</h2>
           <div class="forecast-list">
-            <div 
-              v-for="(day, index) in city.forecast" 
+            <div
+              v-for="(day, index) in city.forecast"
               :key="index"
               class="forecast-item"
             >
@@ -96,8 +136,68 @@ const formatTemp = (tempC) => {
 </template>
 
 <style scoped>
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .back-btn {
-  margin-bottom: 2rem;
+  /* sin margen extra, lo maneja .top-bar */
+}
+
+/* Fav button en detalle */
+.fav-btn {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.fav-btn:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.fav-btn.active {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.6);
+  color: #fbbf24;
+}
+
+/* Pref banner */
+.user-pref-banner {
+  background: rgba(56, 189, 248, 0.07);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.pref-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pref-link:hover {
+  color: #7dd3fc;
 }
 
 .city-detail {
@@ -263,11 +363,11 @@ const formatTemp = (tempC) => {
   .header-section {
     flex-direction: column;
   }
-  
+
   .current-weather {
     width: 100%;
   }
-  
+
   .layout-grid {
     grid-template-columns: 1fr;
   }
