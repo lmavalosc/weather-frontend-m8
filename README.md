@@ -150,7 +150,7 @@ La app estará disponible en `http://localhost:5173`
 
 ## 🔗 Repositorio
 
-[GitHub – lmavalosc/weather-frontend-m6](https://github.com/lmavalosc/weather-frontend-m6)
+[GitHub – lmavalosc/weather-frontend-m7](https://github.com/lmavalosc/weather-frontend-m7)
 
 ---
 
