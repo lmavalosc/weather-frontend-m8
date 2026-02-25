@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { RouterView, RouterLink, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
@@ -8,6 +8,19 @@ const router = useRouter()
 
 const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
 const currentUser = computed(() => store.getters['auth/currentUser'])
+const preferencias = computed(() => store.getters['auth/preferencias'])
+
+watch(
+  () => preferencias.value?.tema,
+  (newTema) => {
+    if (newTema === 'light') {
+      document.body.classList.add('light-theme')
+    } else {
+      document.body.classList.remove('light-theme')
+    }
+  },
+  { immediate: true }
+)
 
 const logout = async () => {
   await store.dispatch('auth/logout')

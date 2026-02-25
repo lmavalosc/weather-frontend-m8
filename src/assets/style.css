@@ -143,3 +143,26 @@ input[type="text"]:focus {
 .justify-between {
     justify-content: space-between;
 }
+
+/* Light Theme Overrides */
+body.light-theme {
+    --bg-dark: #f8fafc;
+    --bg-panel: rgba(255, 255, 255, 0.8);
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+    --glass-border: rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at top right, #e0f2fe, #f1f5f9);
+    color: var(--text-main);
+}
+
+body.light-theme .title,
+body.light-theme .logo-text,
+body.light-theme .register-title,
+body.light-theme .login-title {
+    background: linear-gradient(to right, #0284c7, #7c3aed);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

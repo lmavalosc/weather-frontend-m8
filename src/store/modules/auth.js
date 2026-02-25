@@ -1,9 +1,16 @@
 import { authLogin, authRegister } from '../../data/usersMock'
 
-// Recuperar sesión persistida en localStorage
-const storedUser = localStorage.getItem('clima_user')
-    ? JSON.parse(localStorage.getItem('clima_user'))
-    : null
+// Recuperar sesión persistida en localStorage de forma segura
+let storedUser = null
+try {
+    const saved = localStorage.getItem('clima_user')
+    if (saved) {
+        storedUser = JSON.parse(saved)
+    }
+} catch (e) {
+    console.error('Error parseando sesión de localStorage', e)
+    localStorage.removeItem('clima_user')
+}
 
 const state = {
     currentUser: storedUser,    // Objeto usuario o null
@@ -38,15 +45,12 @@ const mutations = {
         state.isAuthenticated = true
         state.loading = false
         state.error = null
-        // Persistir sesión en localStorage
-        localStorage.setItem('clima_user', JSON.stringify(user))
     },
     LOGOUT(state) {
         state.currentUser = null
         state.isAuthenticated = false
         state.loading = false
         state.error = null
-        localStorage.removeItem('clima_user')
     },
     UPDATE_PREFERENCIAS(state, preferencias) {
         if (state.currentUser) {
@@ -54,7 +58,6 @@ const mutations = {
                 ...state.currentUser,
                 preferencias: { ...state.currentUser.preferencias, ...preferencias }
             }
-            localStorage.setItem('clima_user', JSON.stringify(state.currentUser))
         }
     },
     TOGGLE_FAVORITO(state, cityId) {
@@ -67,7 +70,6 @@ const mutations = {
             favoritos.splice(idx, 1)
         }
         state.currentUser = { ...state.currentUser, favoritos }
-        localStorage.setItem('clima_user', JSON.stringify(state.currentUser))
     }
 }
 
@@ -78,6 +80,7 @@ const actions = {
         try {
             const user = await authLogin(email, password)
             commit('LOGIN_SUCCESS', user)
+            localStorage.setItem('clima_user', JSON.stringify(user))
             return user
         } catch (err) {
             commit('SET_LOADING', false)
@@ -92,6 +95,7 @@ const actions = {
         try {
             const user = await authRegister(nombre, email, password)
             commit('LOGIN_SUCCESS', user)
+            localStorage.setItem('clima_user', JSON.stringify(user))
             return user
         } catch (err) {
             commit('SET_LOADING', false)
@@ -102,14 +106,21 @@ const actions = {
 
     logout({ commit }) {
         commit('LOGOUT')
+        localStorage.removeItem('clima_user')
     },
 
-    actualizarPreferencias({ commit }, preferencias) {
+    actualizarPreferencias({ commit, state }, preferencias) {
         commit('UPDATE_PREFERENCIAS', preferencias)
+        if (state.currentUser) {
+            localStorage.setItem('clima_user', JSON.stringify(state.currentUser))
+        }
     },
 
-    toggleFavorito({ commit }, cityId) {
+    toggleFavorito({ commit, state }, cityId) {
         commit('TOGGLE_FAVORITO', cityId)
+        if (state.currentUser) {
+            localStorage.setItem('clima_user', JSON.stringify(state.currentUser))
+        }
     }
 }
 

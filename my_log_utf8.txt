@@ -1,0 +1,58 @@
+﻿commit f4736df3d8a714261d9c58f9a362b2a7fc4597f3
+Author: Moises <moises@estudiante.com>
+Date:   Wed Feb 25 02:15:10 2026 -0300
+
+    Update project for GitHub
+
+commit dd6a47583f4bf41bcb652864a1d233bb42956b85
+Author: Moises <moises@estudiante.com>
+Date:   Wed Feb 25 02:09:18 2026 -0300
+
+    docs: actualizar enlace al repositorio weather-frontend-m7
+
+commit e0ab6841e07bec01d7cc0b571733dfaa24c22eac
+Author: Moises <moises@estudiante.com>
+Date:   Wed Feb 25 01:57:54 2026 -0300
+
+    feat(views): integrar autenticacion Vuex en HomeView, DetailView y App.vue
+    
+    - App.vue: navbar dinamico con avatar/nombre del usuario logueado y boton Salir
+    - HomeView.vue: botones de favorito por ciudad leyendo estado de auth/favoritos desde Vuex
+    - DetailView.vue: temperatura en unidad preferida del usuario (auth/preferencias.unidad)
+    - Rutas /favoritos y /perfil visibles en navbar solo cuando isAuthenticated = true
+
+commit ab855995e8d1fec2296e103bc559108e765dbd7a
+Author: Moises <moises@estudiante.com>
+Date:   Wed Feb 25 01:52:50 2026 -0300
+
+    style(design): agregar tokens CSS de autenticacion (success, danger, warning) al sistema de diseno global
+
+commit f60cd40b1a1509f284225a59d50644cb23e0d8b1
+Author: Moises <moises@estudiante.com>
+Date:   Wed Feb 25 01:51:35 2026 -0300
+
+    feat(auth): agregar store Vuex con modulo de autenticacion y persistencia en localStorage
+
+commit ca92d23891da4c8806325c51afbfac7c4b7cb9f0
+Author: Moises <moises@estudiante.com>
+Date:   Sun Feb 22 19:39:58 2026 -0300
+
+    Actualizaci├│n del README con enlace oficial al repositorio
+
+commit f020cf33b7758af417b60ad63e0c47c908e69896
+Author: Moises <moises@estudiante.com>
+Date:   Sun Feb 22 19:29:07 2026 -0300
+
+    Carga final de assets fotogr├íficos, revisi├│n de r├║brica y documentaci├│n en README
+
+commit 78864092db3538855a25fd9e0e0f79ca4c2dbfdf
+Author: Moises <moises@estudiante.com>
+Date:   Sun Feb 22 19:29:07 2026 -0300
+
+    Implementaci├│n de Vue Router y Vista de Detalle con conversi├│n de temperatura
+
+commit 2681c818f29485d8717a32ff4bba243b2e9c54dd
+Author: Moises <moises@estudiante.com>
+Date:   Sun Feb 22 19:28:57 2026 -0300
+
+    Inicializaci├│n de la aplicaci├│n y vista Home
