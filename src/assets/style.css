@@ -5,6 +5,12 @@
     --text-muted: #94a3b8;
     --accent: #38bdf8;
     --glass-border: rgba(255, 255, 255, 0.1);
+    /* Tokens de autenticacion y estado */
+    --success: #4ade80;
+    --success-bg: rgba(74, 222, 128, 0.12);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.15);
+    --warning: #fbbf24;
 }
 
 * {
