@@ -1,4 +1,4 @@
-import { chileCitiesData } from '../../data/weatherMock'
+import { baseCitiesConfig } from '../../data/citiesData'
 
 function mapWeatherCode(code) {
     if (code === 0) return 'Despejado';
@@ -46,10 +46,10 @@ export default {
             commit('SET_ALERT', null);
             
             try {
-                let citiesWithWeather = [...chileCitiesData];
+                let citiesConfig = [...baseCitiesConfig];
                 const apiUrl = import.meta.env.VITE_API_URL || 'https://api.open-meteo.com/v1/forecast';
                 
-                const fetchPromises = citiesWithWeather.map(async (city) => {
+                const fetchPromises = citiesConfig.map(async (city) => {
                     const res = await fetch(`${apiUrl}?latitude=${city.lat}&longitude=${city.lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FSantiago`);
                     if(!res.ok) throw new Error(`Error HTTP: ${res.status}`);
                     const data = await res.json();
@@ -74,19 +74,20 @@ export default {
                     };
                 });
                 
-                citiesWithWeather = await Promise.all(fetchPromises);
-                commit('SET_CITIES', citiesWithWeather);
+                citiesConfig = await Promise.all(fetchPromises);
+                commit('SET_CITIES', citiesConfig);
                 
                 // Calculate Alert: Heatwave (max >= 30) or freezing (min <= 0)
-                const hotCities = citiesWithWeather.filter(c => c.stats.max >= 30);
+                const hotCities = citiesConfig.filter(c => c.stats.max >= 30);
                 if (hotCities.length > 0) {
                     commit('SET_ALERT', `¡Alerta de calor! Se esperan temperaturas altas en: ${hotCities.map(c => c.name).join(', ')}.`);
                 }
                 
             } catch (err) {
                 console.error('Error fetching weather:', err);
-                commit('SET_ERROR', 'Ocurrió un error al obtener los datos del clima en tiempo real desde la API. Se cargarán los datos locales de respaldo por seguridad.');
-                commit('SET_CITIES', chileCitiesData);
+                commit('SET_ERROR', 'Ocurrió un error al obtener los datos del clima en tiempo real desde la API. Por favor, revisa tu conexión a internet.');
+                // En caso de fallo crítico, cargamos los datos geográficos básicos sin pronóstico
+                commit('SET_CITIES', baseCitiesConfig);
             } finally {
                 commit('SET_LOADING', false);
             }

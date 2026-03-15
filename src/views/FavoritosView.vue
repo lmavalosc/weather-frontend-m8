@@ -1,18 +1,25 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { chileCitiesData } from '../data/weatherMock'
 
 const store = useStore()
 const router = useRouter()
 
 const currentUser = computed(() => store.getters['auth/currentUser'])
 const favoriteIds = computed(() => store.getters['auth/favoritos'])
+const allCities = computed(() => store.getters['weather/allCities'])
+const isLoading = computed(() => store.getters['weather/isLoading'])
 
-// Ciudades favoritas del usuario
+onMounted(() => {
+  if (allCities.value.length === 0) {
+    store.dispatch('weather/fetchAllCitiesWeather')
+  }
+})
+
+// Ciudades favoritas del usuario (ahora desde los datos globales vivos de Vuex)
 const favoriteCities = computed(() =>
-  chileCitiesData.filter(c => favoriteIds.value.includes(c.id))
+  allCities.value.filter(c => favoriteIds.value.includes(c.id))
 )
 
 const toggleFavorito = (cityId) => {
@@ -34,8 +41,14 @@ const goToCity = (cityId) => {
       </p>
     </div>
 
+    <!-- Carga inicial -->
+    <div v-if="isLoading" class="empty-state glass-panel">
+      <div class="empty-icon">⏳</div>
+      <h2>Cargando favoritos...</h2>
+    </div>
+
     <!-- Sin favoritos -->
-    <div v-if="favoriteCities.length === 0" class="empty-state glass-panel">
+    <div v-else-if="favoriteCities.length === 0" class="empty-state glass-panel">
       <div class="empty-icon">🌎</div>
       <h2>Aún no tienes favoritos</h2>
       <p>Explora las ciudades y agrega las que más te gusten.</p>
@@ -57,11 +70,14 @@ const goToCity = (cityId) => {
               <h2>{{ city.name }}</h2>
               <span class="region-label">{{ city.region }}</span>
             </div>
-            <span class="icon">{{ city.currentWeather.icon }}</span>
+            <span class="icon" v-if="city.currentWeather">{{ city.currentWeather.icon }}</span>
           </div>
-          <div class="temp-display">
+          <div class="temp-display" v-if="city.currentWeather">
             <span class="temp">{{ city.currentWeather.temp }}°C</span>
             <span class="condition">{{ city.currentWeather.condition }}</span>
+          </div>
+          <div class="temp-display" v-else>
+            <span class="condition" style="color:#ef4444;">Sin conexión a la API</span>
           </div>
           <!-- Botón quitar favorito -->
           <button
