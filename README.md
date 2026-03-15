@@ -169,7 +169,22 @@ La app estará disponible en `http://localhost:5173`
 
 ## 🔗 Repositorio
 
-[GitHub – lmavalosc/weather-frontend-m7](https://github.com/lmavalosc/weather-frontend-m7)
+[GitHub – weather-frontend-m8](https://github.com/lmavalosc/weather-frontend-m8)
+
+---
+
+## 📸 Capturas de Pantalla (Opcional)
+
+*(Puedes reemplazar estas imágenes con capturas reales subiendo los archivos a GitHub o a una carpeta en tu repositorio)*
+
+### Vista Home (Listado y Alertas)
+![Home](https://via.placeholder.com/800x400.png?text=Vista+Home+-+Clima+Chile)
+
+### Vista de Detalle (Estadísticas de la semana)
+![Detalle](https://via.placeholder.com/800x400.png?text=Vista+Detalle+-+Pronostico)
+
+### Vista de Favoritos
+![Favoritos](https://via.placeholder.com/800x400.png?text=Mis+Favoritos)
 
 ---
 
