@@ -21,6 +21,7 @@ export const chileCitiesData = [
         name: 'Arica',
         region: 'Arica y Parinacota',
         image: aricaImg,
+        lat: -18.4746, lon: -70.2979,
         currentWeather: { temp: 24, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 23, icon: '☀️' },
@@ -36,6 +37,7 @@ export const chileCitiesData = [
         name: 'Iquique',
         region: 'Tarapacá',
         image: iquiqueImg,
+        lat: -20.2133, lon: -70.1503,
         currentWeather: { temp: 22, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 21, icon: '⛅' },
@@ -51,6 +53,7 @@ export const chileCitiesData = [
         name: 'Antofagasta',
         region: 'Antofagasta',
         image: antofagastaImg,
+        lat: -23.6524, lon: -70.3954,
         currentWeather: { temp: 20, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 19, icon: '☀️' },
@@ -66,6 +69,7 @@ export const chileCitiesData = [
         name: 'Copiapó',
         region: 'Atacama',
         image: copiapoImg,
+        lat: -27.3665, lon: -70.3323,
         currentWeather: { temp: 25, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 26, icon: '☀️' },
@@ -74,13 +78,14 @@ export const chileCitiesData = [
         ],
         stats: { min: 12, max: 30, average: 22 },
         color: 'from-red-400 to-orange-600',
-        description: 'Ubicada en el norte chico, es famosa por su cercanía al desierto florido y su fuerte identidad ligada a la minería y la agricultura de valle.'
+        description: 'Ubicada en el norte chico, es famosa por su cercanía al desierto florido y su fuerte identidad ligado a la minería y la agricultura de valle.'
     },
     {
         id: 'la-serena',
         name: 'La Serena',
         region: 'Coquimbo',
         image: laserenaImg,
+        lat: -29.9045, lon: -71.2489,
         currentWeather: { temp: 19, condition: 'Nublado variando a Despejado', icon: '⛅' },
         forecast: [
             { day: 'Lun', temp: 18, icon: '☁️' },
@@ -96,6 +101,7 @@ export const chileCitiesData = [
         name: 'Valparaíso',
         region: 'Valparaíso',
         image: valparaisoImg,
+        lat: -33.036, lon: -71.6273,
         currentWeather: { temp: 18, condition: 'Parcialmente Nublado', icon: '⛅' },
         forecast: [
             { day: 'Lun', temp: 17, icon: '☁️' },
@@ -111,6 +117,7 @@ export const chileCitiesData = [
         name: 'Santiago',
         region: 'Metropolitana de Santiago',
         image: santiagoImg,
+        lat: -33.4372, lon: -70.6506,
         currentWeather: { temp: 28, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 29, icon: '☀️' },
@@ -126,6 +133,7 @@ export const chileCitiesData = [
         name: 'Rancagua',
         region: "Libertador General Bernardo O'Higgins",
         image: rancaguaImg,
+        lat: -34.1708, lon: -70.7445,
         currentWeather: { temp: 26, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 25, icon: '⛅' },
@@ -141,6 +149,7 @@ export const chileCitiesData = [
         name: 'Talca',
         region: 'Maule',
         image: talcaImg,
+        lat: -35.4264, lon: -71.6554,
         currentWeather: { temp: 24, condition: 'Despejado', icon: '☀️' },
         forecast: [
             { day: 'Lun', temp: 23, icon: '⛅' },
@@ -156,6 +165,7 @@ export const chileCitiesData = [
         name: 'Chillán',
         region: 'Ñuble',
         image: chillanImg,
+        lat: -36.6063, lon: -72.1034,
         currentWeather: { temp: 22, condition: 'Parcialmente Nublado', icon: '⛅' },
         forecast: [
             { day: 'Lun', temp: 21, icon: '☁️' },
@@ -171,6 +181,7 @@ export const chileCitiesData = [
         name: 'Concepción',
         region: 'Biobío',
         image: concepcionImg,
+        lat: -36.827, lon: -73.0503,
         currentWeather: { temp: 16, condition: 'Nublado', icon: '☁️' },
         forecast: [
             { day: 'Lun', temp: 17, icon: '🌧️' },
@@ -186,6 +197,7 @@ export const chileCitiesData = [
         name: 'Temuco',
         region: 'La Araucanía',
         image: temucoImg,
+        lat: -38.7397, lon: -72.5984,
         currentWeather: { temp: 15, condition: 'Lluvioso', icon: '🌧️' },
         forecast: [
             { day: 'Lun', temp: 14, icon: '🌧️' },
@@ -201,6 +213,7 @@ export const chileCitiesData = [
         name: 'Valdivia',
         region: 'Los Ríos',
         image: valdiviaImg,
+        lat: -39.8142, lon: -73.2459,
         currentWeather: { temp: 14, condition: 'Lluvioso', icon: '🌧️' },
         forecast: [
             { day: 'Lun', temp: 13, icon: '🌧️' },
@@ -216,6 +229,7 @@ export const chileCitiesData = [
         name: 'Puerto Montt',
         region: 'Los Lagos',
         image: puertomonttImg,
+        lat: -41.4693, lon: -72.9424,
         currentWeather: { temp: 12, condition: 'Chubascos', icon: '🌧️' },
         forecast: [
             { day: 'Lun', temp: 11, icon: '🌧️' },
@@ -231,6 +245,7 @@ export const chileCitiesData = [
         name: 'Coyhaique',
         region: 'Aisén del G. Carlos Ibáñez del Campo',
         image: coyhaiqueImg,
+        lat: -45.5752, lon: -72.0662,
         currentWeather: { temp: 8, condition: 'Parcialmente Nublado', icon: '⛅' },
         forecast: [
             { day: 'Lun', temp: 6, icon: '☁️' },
@@ -246,6 +261,7 @@ export const chileCitiesData = [
         name: 'Punta Arenas',
         region: 'Magallanes y de la Antártica Chilena',
         image: puntaarenasImg,
+        lat: -53.15, lon: -70.9167,
         currentWeather: { temp: 6, condition: 'Vientos Fuertes', icon: '💨' },
         forecast: [
             { day: 'Lun', temp: 5, icon: '🌧️' },

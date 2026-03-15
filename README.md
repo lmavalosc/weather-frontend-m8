@@ -27,6 +27,14 @@ Una aplicación SPA (Single Page Application) del clima en Chile construida con 
 - **Preferencias personales**: unidad de temperatura (°C/°F) y tema (claro/oscuro) guardados en Vuex
 - **La preferencia de temperatura se aplica** en la vista de detalle (°C o °F según el perfil del usuario)
 
+### Módulo 8 – Proyecto Final (Integración API, Estadísticas y Alertas)
+- **Consumo de API Real**: Integración con la API de Open-Meteo usando `fetch` para obtener datos climáticos actuales y pronósticos de los próximos días.
+- **Manejo de Estado Global (Módulo Weather)**: `Vuex` gestiona las llamadas a la API, la lista de ciudades con clima actualizado, la ciudad seleccionada y los estados de carga y error.
+- **Manejo de Estados de Petición**: UI para los estados "Cargando datos..." y despliegue de mensajes de error amigables en caso de fallas de la API.
+- **Cálculo de Estadísticas**: Se calculan promedios, temperaturas mínimas y máximas basándose en la data obtenida en tiempo real para una semana completa.
+- **Generación de Alertas**: Se agregó una regla basada en la respuesta de la API que verifica los próximos días y lanza una alerta en la vista principal si se prevé una ola de calor (temperaturas ≥ 30°C).
+- **Estabilidad, fluidez y Manejo de Errores**: La aplicación maneja caídas en la respuesta de la API mediante bloques `try-catch` y en rutas no encontradas.
+
 ---
 
 ## 🔐 Sistema de Autenticación
@@ -130,17 +138,28 @@ src/
 
 ---
 
-## 🛠️ Instalación y ejecución
+## 🛠️ Requisitos e Instalación
+
+### Requisitos previos
+- Node.js (v16.0 o superior recomendado)
+- npm (Node Package Manager)
+
+### Ejecución local
 
 ```bash
-# Clonar el repositorio
+# 1. Clonar el repositorio
 git clone <URL_DEL_REPO>
-cd app-clima-vue
+cd app-clima-m7-login-vuex
 
-# Instalar dependencias
+# 2. Instalar dependencias
 npm install
 
-# Iniciar servidor de desarrollo
+# 3. Configurar variables de entorno
+# Renombra o copia el archivo .env.example a .env
+cp .env.example .env
+# El archivo .env contiene VITE_API_URL=https://api.open-meteo.com/v1/forecast para la API (no requiere Key obligatoria)
+
+# 4. Iniciar servidor de desarrollo
 npm run dev
 ```
 

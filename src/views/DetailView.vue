@@ -1,23 +1,30 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { chileCitiesData } from '../data/weatherMock'
 
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
-// Preferencias del usuario desde Vuex
 const preferencias = computed(() => store.getters['auth/preferencias'])
 const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
 const favoriteIds = computed(() => store.getters['auth/favoritos'])
 
-// La unidad de temperatura viene de Vuex (preferencias del usuario)
 const isCelsius = computed(() => preferencias.value.unidad === 'C')
 
-const city = computed(() => {
-  return chileCitiesData.find(c => c.id === route.params.id)
+const city = computed(() => store.getters['weather/selectedCity'])
+const isLoading = computed(() => store.getters['weather/isLoading'])
+const hasError = computed(() => store.getters['weather/hasError'])
+
+onMounted(() => {
+  store.dispatch('weather/fetchCityWeather', route.params.id)
+})
+
+watch(() => route.params.id, (newId) => {
+  if(newId) {
+    store.dispatch('weather/fetchCityWeather', newId)
+  }
 })
 
 const goBack = () => {
@@ -49,7 +56,18 @@ const toggleTempUnit = () => {
 </script>
 
 <template>
-  <div class="detail-view" v-if="city">
+  <div v-if="isLoading" class="loading-container glass-panel" style="margin-top: 2rem;">
+    <div class="spinner"></div>
+    <p>Cargando pronóstico...</p>
+  </div>
+  
+  <div v-else-if="hasError && !city" class="error-banner glass-panel" style="margin-top: 2rem;">
+    <h2>Error</h2>
+    <p>{{ hasError }}</p>
+    <button @click="goBack" class="btn" style="margin-top: 1rem;">Volver al inicio</button>
+  </div>
+
+  <div class="detail-view" v-else-if="city">
     <div class="top-bar">
       <button @click="goBack" class="btn btn-secondary back-btn">
         ← Volver al inicio
@@ -94,7 +112,7 @@ const toggleTempUnit = () => {
 
       <div class="grid layout-grid">
         <div class="forecast-section glass-panel inner-panel">
-          <h2 class="subtitle">Pronóstico</h2>
+          <h2 class="subtitle">Pronóstico (Próximos días)</h2>
           <div class="forecast-list">
             <div
               v-for="(day, index) in city.forecast"
@@ -136,6 +154,38 @@ const toggleTempUnit = () => {
 </template>
 
 <style scoped>
+.error-banner {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255,255,255,0.1);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .top-bar {
   display: flex;
   justify-content: space-between;

@@ -1,14 +1,22 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { chileCitiesData } from '../data/weatherMock'
 
 const store = useStore()
 const router = useRouter()
 
 const searchQuery = ref('')
-const cities = ref(chileCitiesData)
+const cities = computed(() => store.getters['weather/allCities'])
+const isLoading = computed(() => store.getters['weather/isLoading'])
+const hasError = computed(() => store.getters['weather/hasError'])
+const alertMessage = computed(() => store.getters['weather/alertMessage'])
+
+onMounted(() => {
+  if (cities.value.length === 0) {
+    store.dispatch('weather/fetchAllCitiesWeather')
+  }
+})
 
 const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
 const favoriteIds = computed(() => store.getters['auth/favoritos'])
@@ -43,10 +51,25 @@ const toggleFavorito = (event, cityId) => {
         placeholder="Buscar una ciudad..."
         class="search-input"
         id="home-search"
+        :disabled="isLoading"
       />
     </div>
 
-    <div class="cities-grid">
+    <!-- Alertas y estados (Load/Error/Alert) -->
+    <div v-if="alertMessage" class="alert-banner glass-panel">
+      ⚠️ {{ alertMessage }}
+    </div>
+    
+    <div v-if="hasError" class="error-banner glass-panel">
+      ❌ {{ hasError }}
+    </div>
+    
+    <div v-if="isLoading" class="loading-container glass-panel">
+      <div class="spinner"></div>
+      <p>Cargando datos del clima en tiempo real...</p>
+    </div>
+
+    <div v-else class="cities-grid">
       <RouterLink
         v-for="city in filteredCities"
         :key="city.id"
@@ -99,6 +122,51 @@ const toggleFavorito = (event, cityId) => {
 </template>
 
 <style scoped>
+.alert-banner {
+  background: rgba(234, 179, 8, 0.2);
+  border: 1px solid rgba(234, 179, 8, 0.5);
+  color: #fef08a;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.error-banner {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255,255,255,0.1);
+  border-left-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .search-container {
   margin-bottom: 2rem;
 }
