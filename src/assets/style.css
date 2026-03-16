@@ -1,10 +1,10 @@
 :root {
-    --bg-dark: #0f172a;
-    --bg-panel: rgba(30, 41, 59, 0.7);
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --bg-dark: #1e112a; /* Púrpura muy oscuro */
+    --bg-panel: rgba(45, 27, 62, 0.7); /* Púrpura grisáceo transparente */
+    --text-main: #fdfcff;
+    --text-muted: #bba8d1;
+    --accent: #d946ef; /* Fucsia vibrante */
+    --glass-border: rgba(217, 70, 239, 0.2);
     /* Tokens de autenticacion y estado */
     --success: #4ade80;
     --success-bg: rgba(74, 222, 128, 0.12);
@@ -24,7 +24,7 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     min-height: 100vh;
-    background-image: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+    background-image: radial-gradient(circle at top right, #3b0764, #1e112a);
     background-attachment: fixed;
 }
 

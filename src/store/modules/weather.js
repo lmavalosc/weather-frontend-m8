@@ -30,7 +30,8 @@ export default {
         selectedCity: null,
         loading: false,
         error: null,
-        alertMessage: null
+        alertMessage: null,
+        lastFetch: null
     },
     getters: {
         allCities: state => state.cities,
@@ -40,7 +41,12 @@ export default {
         alertMessage: state => state.alertMessage
     },
     actions: {
-        async fetchAllCitiesWeather({ commit }) {
+        async fetchAllCitiesWeather({ commit, state }, force = false) {
+            const cacheTime = 5 * 60 * 1000; // 5 minutos
+            if (!force && state.lastFetch && (Date.now() - state.lastFetch < cacheTime)) {
+                return; // Usar caché
+            }
+
             commit('SET_LOADING', true);
             commit('CLEAR_ERROR');
             commit('SET_ALERT', null);
@@ -50,9 +56,21 @@ export default {
                 const apiUrl = import.meta.env.VITE_API_URL || 'https://api.open-meteo.com/v1/forecast';
                 
                 const fetchPromises = citiesConfig.map(async (city) => {
-                    const res = await fetch(`${apiUrl}?latitude=${city.lat}&longitude=${city.lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FSantiago`);
-                    if(!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-                    const data = await res.json();
+                    const url = `${apiUrl}?latitude=${city.lat}&longitude=${city.lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FSantiago`;
+                    
+                    let data;
+                    let retries = 3;
+                    for (let i = 0; i < retries; i++) {
+                        try {
+                            const res = await fetch(url);
+                            if(!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+                            data = await res.json();
+                            break;
+                        } catch (err) {
+                            if (i === retries - 1) throw err;
+                            await new Promise(r => setTimeout(r, 1000 * (i + 1))); // Backoff exponencial básico
+                        }
+                    }
                     
                     return {
                         ...city,
@@ -76,6 +94,7 @@ export default {
                 
                 citiesConfig = await Promise.all(fetchPromises);
                 commit('SET_CITIES', citiesConfig);
+                commit('SET_LAST_FETCH', Date.now());
                 
                 // Calculate Alert: Heatwave (max >= 30) or freezing (min <= 0)
                 const hotCities = citiesConfig.filter(c => c.stats.max >= 30);
@@ -93,9 +112,8 @@ export default {
             }
         },
         async fetchCityWeather({ commit, state, dispatch }, cityId) {
-            if (state.cities.length === 0) {
-                await dispatch('fetchAllCitiesWeather');
-            }
+            await dispatch('fetchAllCitiesWeather');
+            
             const city = state.cities.find(c => c.id === cityId);
             if (city) {
                 commit('SET_SELECTED_CITY', city);
@@ -123,6 +141,9 @@ export default {
         },
         SET_ALERT(state, msg) {
             state.alertMessage = msg;
+        },
+        SET_LAST_FETCH(state, timestamp) {
+            state.lastFetch = timestamp;
         }
     }
 }

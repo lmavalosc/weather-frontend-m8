@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import DetailView from '../views/DetailView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
-import FavoritosView from '../views/FavoritosView.vue'
-import PerfilView from '../views/PerfilView.vue'
 import store from '../store'
+
+const HomeView = () => import('../views/HomeView.vue')
+const DetailView = () => import('../views/DetailView.vue')
+const LoginView = () => import('../views/LoginView.vue')
+const RegisterView = () => import('../views/RegisterView.vue')
+const FavoritosView = () => import('../views/FavoritosView.vue')
+const PerfilView = () => import('../views/PerfilView.vue')
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),

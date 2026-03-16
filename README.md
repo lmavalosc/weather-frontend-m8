@@ -4,7 +4,8 @@ Una aplicación SPA (Single Page Application) del clima en Chile construida con 
 
 ## 🚀 Demo
 
-> Ejecuta localmente siguiendo las instrucciones más abajo.
+- **URL de Producción (Live)**: [Ver en Vercel](https://app-clima-vue-m8.vercel.app/)
+> _Nota: El enlace de producción es una demostración. Sigue las instrucciones locales para probar el entorno de desarrollo._
 
 ## ✨ Características
 
@@ -100,6 +101,21 @@ src/
 │   └── PerfilView.vue       # Ruta privada: perfil y preferencias
 ├── App.vue                  # Componente raíz con navbar dinámico
 └── main.js                  # Punto de entrada (registra Vue Router + Vuex)
+### Diagrama de Arquitectura (Vue + Vuex)
+
+```mermaid
+graph TD;
+    A[App.vue] --> B[Vue Router];
+    B --> C(HomeView / Listado);
+    B --> D(DetailView / Pronóstico);
+    B --> E(Auth Views);
+    
+    C -- Fetch API / LocalCache --> F{Vuex: Weather Module};
+    D -- Get City --> F;
+    E -- Login / Guard --> G{Vuex: Auth Module};
+    
+    F -- Axios/Fetch --> H[(Open-Meteo API)];
+    G -- Persistencia --> I[(localStorage)];
 ```
 
 ---
@@ -170,21 +186,6 @@ La app estará disponible en `http://localhost:5173`
 ## 🔗 Repositorio
 
 [GitHub – weather-frontend-m8](https://github.com/lmavalosc/weather-frontend-m8)
-
----
-
-## 📸 Capturas de Pantalla (Opcional)
-
-*(Puedes reemplazar estas imágenes con capturas reales subiendo los archivos a GitHub o a una carpeta en tu repositorio)*
-
-### Vista Home (Listado y Alertas)
-![Home](https://via.placeholder.com/800x400.png?text=Vista+Home+-+Clima+Chile)
-
-### Vista de Detalle (Estadísticas de la semana)
-![Detalle](https://via.placeholder.com/800x400.png?text=Vista+Detalle+-+Pronostico)
-
-### Vista de Favoritos
-![Favoritos](https://via.placeholder.com/800x400.png?text=Mis+Favoritos)
 
 ---
 

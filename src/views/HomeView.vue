@@ -13,9 +13,7 @@ const hasError = computed(() => store.getters['weather/hasError'])
 const alertMessage = computed(() => store.getters['weather/alertMessage'])
 
 onMounted(() => {
-  if (cities.value.length === 0) {
-    store.dispatch('weather/fetchAllCitiesWeather')
-  }
+  store.dispatch('weather/fetchAllCitiesWeather')
 })
 
 const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
@@ -51,6 +49,7 @@ const toggleFavorito = (event, cityId) => {
         placeholder="Buscar una ciudad..."
         class="search-input"
         id="home-search"
+        aria-label="Buscar una ciudad"
         :disabled="isLoading"
       />
     </div>
